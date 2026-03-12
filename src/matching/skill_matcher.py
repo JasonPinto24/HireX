@@ -1,3 +1,8 @@
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
 def normalize_skills(skills):
 
     #remove spaces and convert to lowercase
@@ -8,19 +13,32 @@ def normalize_skills(skills):
     return [skill.strip().lower() for skill in skills]
 
 
-def match_skills(candidate_skills, job_skills):
-    
-    candidate_skills = normalize_skills(candidate_skills)
-    job_skills = normalize_skills(job_skills)
+def embed_skills(skills):
+
+    return model.encode(skills)
+
+
+def match_skills(candidate_skills, job_skills, threshold=0.6):
+  
+
+    candidate_embeddings = embed_skills(candidate_skills)
+    job_embeddings = embed_skills(job_skills)
 
     matched = []
     missing = []
 
-    for skill in job_skills:
-        if skill in candidate_skills:
-            matched.append(skill)
+    for i, job_vec in enumerate(job_embeddings):
+
+        similarity_scores = cosine_similarity(
+            [job_vec], candidate_embeddings
+        )[0]
+
+        best_score = max(similarity_scores)
+
+        if best_score >= threshold:
+            matched.append(job_skills[i])
         else:
-            missing.append(skill)
+            missing.append(job_skills[i])
 
     return {
         "matched": matched,
@@ -28,7 +46,6 @@ def match_skills(candidate_skills, job_skills):
         "match_count": len(matched),
         "total_required": len(job_skills)
     }
-
 
 def calculate_match_percentage(skill_results):
     
