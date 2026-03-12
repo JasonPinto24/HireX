@@ -6,7 +6,7 @@ username = st.text_input("GitHub Username")
 
 if st.button("Analyze"):
 
-    st.metric("Candidate Score", -)
+    st.metric("Candidate Score")
 
     st.write("### Strengths")
     st.write("-")
