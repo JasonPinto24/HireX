@@ -29,6 +29,9 @@ def match_skills(candidate_skills, job_skills, threshold=0.6):
 
     for i, job_vec in enumerate(job_embeddings):
 
+        #enumerate: This allows you to loop through a sequence 
+        #and have access to both the index and the element at the same time
+        
         similarity_scores = cosine_similarity(
             [job_vec], candidate_embeddings
         )[0]
