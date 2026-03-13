@@ -4,15 +4,7 @@ def skill_match_score(skill_results):
     Max: 40 points
     """
 
-    matched = skill_results["match_count"]
-    total = skill_results["total_required"]
-
-    if total == 0:
-        return 0
-
-    percentage = matched / total
-
-    return percentage * 40
+    return (skill_results["match_percentage"] / 100) * 40
 
 
 def repo_score(candidate_data):
