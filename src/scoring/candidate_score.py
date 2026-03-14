@@ -17,14 +17,27 @@ def repo_score(candidate_data):
     return min(repos * 2, 20)
 
 
+import datetime
+
 def activity_score(candidate_data):
     """
     Max: 20 points
+    Considers recency of commits: recent commits weigh more.
     """
+    commits = candidate_data.get("activity", []) 
+    total_score = 0
+    now = datetime.datetime.now()
 
-    commits = candidate_data.get("activity", {}).get("commits_last_year", 0)
+    for commit in commits:
+        # commit date should be a datetime object, or parse if string
+        date = commit.get("date")
+        if isinstance(date, str):
+            date = datetime.datetime.fromisoformat(date) 
+        age_days = (now - date).days
+        weight = max(0, 1 - age_days / 365) 
+        total_score += weight
 
-    return min(commits / 50, 20)
+    return min(total_score, 20)
 
 
 def language_diversity_score(candidate_data):
