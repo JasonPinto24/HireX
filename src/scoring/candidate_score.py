@@ -1,4 +1,4 @@
-
+from src.ml_predictor import predict_ml_score
 def skill_match_score(skill_results):
     """""
     Max: 40 points
@@ -67,4 +67,24 @@ def calculate_score(candidate_data, skill_results):
             "activity": round(s3, 2),
             "languages": round(s4, 2)
         }
+    }
+
+def hybrid_score(candidate_data, skill_results):
+
+    rule_scores = calculate_score(candidate_data, skill_results)
+
+    rule_total = rule_scores["total_score"]
+
+    ml_score = predict_ml_score(
+        skill_results,
+        rule_scores["breakdown"]
+    )
+
+    final_score = 0.7 * rule_total + 0.3 * ml_score
+
+    return {
+        "final_score": round(final_score, 2),
+        "rule_score": rule_total,
+        "ml_score": round(ml_score, 2),
+        "breakdown": rule_scores["breakdown"]
     }
