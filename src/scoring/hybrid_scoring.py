@@ -15,10 +15,10 @@ def calculate_score(candidate_data, skill_results):
     total_score = skill_score + github_score + coding_score
 
     return {
-        "total_score": round(total_score, 2),
+        "total_score": round(float(total_score), 2),
         "breakdown": {
-            "skill_match": round(skill_score, 2),
-            "github": round(github_score, 2),
-            "coding_profiles": round(coding_score, 2)
+            "skill_match": round(float(skill_score), 2),
+            "github": round(float(github_score), 2),
+            "coding_profiles": round(float(coding_score), 2)
         }
-    }
+}
