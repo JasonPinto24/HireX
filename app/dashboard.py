@@ -3,6 +3,7 @@ import altair as alt
 from src.matching import match_skills
 from src.scoring import calculate_score
 from src.explanation import generate_report
+from src.parsing import *
 
 st.title("HireX Candidate Analyzer")
 
@@ -12,7 +13,7 @@ job_file = st.file_uploader("Upload Job Description", type=["pdf", "docx"])
 if resume_file and job_file:
 
    
-    candidate_info = parse_resume(resume_file)
+    candidate_info = build_candidate_profile(resume_file)
 
 
     candidate_name = candidate_info.get("name", "Unknown")
@@ -20,7 +21,7 @@ if resume_file and job_file:
     github_username = candidate_info.get("github_username", None)
 
   
-    job_skills = parse_resume(job_file).get("skills", [])
+    job_skills = extract_job_skills(job_file).get("skills", [])
 
    
     if github_username:
