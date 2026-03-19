@@ -38,8 +38,28 @@ def extract_resume_skills(file_path):
     text = extract_text_from_pdf(file_path)
 
     found_skills = []
-    for skill in skills_db:
-        if skill in text:
-            found_skills.append(skill)
+    for candidate in candidates:
+        if candidate in skills_db:
+            found_skills.append(candidate)
+    return found_skills
 
-    return list(set(found_skills))
+def extract_candidate_ids(file_path):
+    text = extract_text_from_pdf(file_path)
+    candidate_ids = {}
+
+    github_pattern = r"github\.com/([A-Za-z0-9_-]+)"
+    github_id = re.search(github_pattern, text)
+    if github_id:
+        candidate_ids["github"] = github_id.group(1)
+    
+    leetcode_pattern = r"leetcode\.com/([A-Za-z0-9_-]+)"
+    leetcode_id = re.search(leetcode_pattern, text)
+    if leetcode_id:
+        candidate_ids["leetcode"] = leetcode_id.group(1)
+    
+    codeforces_pattern = r"codeforces\.com/profile/([A-Za-z0-9_-]+)"
+    codeforces_id = re.search(codeforces_pattern, text)
+    if codeforces_id:
+        candidate_ids["codeforces"] = codeforces_id.group(1)
+    
+    return candidate_ids

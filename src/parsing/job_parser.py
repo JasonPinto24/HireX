@@ -18,7 +18,20 @@ def load_skills(file_path=SKILLS_PATH):
                 skills.append(cleaned_line)
     return skills
 
-def extract_job_skills(job_text):
+def extract_text_from_pdf(file_path):
+    # get text from resume pdf
+    text = ""
+    with fitz.open(file_path) as pdf:
+        for page in pdf:
+            content = page.get_text()
+            if content:
+                text += content + " "
+    
+    text = re.sub(r"\s+", " ", text)
+    return text.lower()
+
+def extract_job_skills(file_path):
+    job_text = extract_text_from_pdf(file_path)
     skills_db = load_skills()
     job_text = job_text.lower()
 
