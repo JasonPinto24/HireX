@@ -1,11 +1,16 @@
 import fitz
 import re
-import spacy
 
-nlp = spacy.load("en_core_web_sm")
+import os
 
-def load_skills(file_path="data/skills_dataset.txt"):
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+SKILLS_PATH = os.path.join(BASE_DIR, "data", "skills_dataset.txt")
+
+def load_skills(file_path=SKILLS_PATH):
     # load skills from data/skills_dataset
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Skills file not found at: {file_path}")
     skills = []
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
@@ -27,24 +32,14 @@ def extract_text_from_pdf(file_path):
     text = re.sub(r"\s+", " ", text)
     return text.lower()
 
-def extract_candidate_phrases(text):
-    doc = nlp(text)
-    candidates = []
-    for ent in doc.ents:
-        candidates.append(ent.text.lower())
-    
-    for chunk in doc.noun_chunks:
-        candidates.append(chunk.text.lower())
-    
-    return list(set(candidates))
 
 def extract_resume_skills(file_path):
-    # create a skills list given in resume
     skills_db = load_skills()
     text = extract_text_from_pdf(file_path)
-    candidates = extract_candidate_phrases(text)
+
     found_skills = []
-    for candidate in candidates:
-        if candidate in skills_db:
-            found_skills.append(candidate)
-    return found_skills
+    for skill in skills_db:
+        if skill in text:
+            found_skills.append(skill)
+
+    return list(set(found_skills))

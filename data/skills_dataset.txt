@@ -1,6 +1,7 @@
 python
 java
-c++
+cpp
+c
 javascript
 typescript
 sql

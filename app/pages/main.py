@@ -229,8 +229,20 @@ st.caption("Analyze Codeforces and LeetCode profiles with metrics, charts, and s
 
 with st.sidebar:
     st.header("Inputs")
-    cf_handle = st.text_input("Codeforces Handle", placeholder="e.g. tourist")
-    lc_username = st.text_input("LeetCode Username", placeholder="e.g. some_user")
+
+    # ✅ Auto-fill from session
+    cf_handle = st.text_input(
+        "Codeforces Handle",
+        value=st.session_state.get("codeforces_handle", ""),
+        placeholder="e.g. tourist"
+    )
+
+    lc_username = st.text_input(
+        "LeetCode Username",
+        value=st.session_state.get("leetcode_username", ""),
+        placeholder="e.g. some_user"
+    )
+
     analyze_button = st.button("Analyze Profiles")
 
     st.markdown("---")
@@ -239,7 +251,15 @@ with st.sidebar:
     st.write("- LeetCode acceptance rate may differ from the profile UI depending on source fields.")
     st.write("- Codeforces analysis includes solved counts, ratings, buckets, and top tags.")
 
-if analyze_button:
+auto_run = False
+
+if (
+    st.session_state.get("codeforces_handle")
+    or st.session_state.get("leetcode_username")
+):
+    auto_run = True
+
+if analyze_button or auto_run:
     if not cf_handle and not lc_username:
         st.warning("Please enter at least one profile.")
     else:
