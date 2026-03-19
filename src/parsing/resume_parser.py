@@ -38,6 +38,18 @@ def extract_candidate_phrases(text):
     
     return list(set(candidates))
 
+def extract_name(file_path):
+    text = extract_text_from_pdf(file_path)
+    doc = nlp(text)
+    names = []
+    for ent in doc.ents:
+        if ent.label_ == "PERSON":
+            names.append(ent.text.strip())
+    
+    if names:
+        return names[0]
+    return None
+
 def extract_resume_skills(file_path):
     # create a skills list given in resume
     skills_db = load_skills()
