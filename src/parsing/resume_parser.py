@@ -36,12 +36,11 @@ def extract_text_from_pdf(file_path):
 def extract_resume_skills(file_path):
     skills_db = load_skills()
     text = extract_text_from_pdf(file_path)
+    for skill in skills_db:
+            if skill in text:
+                found_skills.append(skill)
 
-    found_skills = []
-    for candidate in candidates:
-        if candidate in skills_db:
-            found_skills.append(candidate)
-    return found_skills
+    return list(set(found_skills))
 
 def extract_candidate_ids(file_path):
     text = extract_text_from_pdf(file_path)

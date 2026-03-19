@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 from src.services.coding_profile_service import analyze_coding_profiles
-
+st.write("YOU ARE IN MAIN PAGE")
 st.set_page_config(
     page_title="Coding Profile Analyzer",
     page_icon="💻",

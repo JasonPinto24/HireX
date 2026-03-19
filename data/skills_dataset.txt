@@ -1,6 +1,6 @@
 python
 java
-cpp
+c++
 c
 javascript
 typescript
